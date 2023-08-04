@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { React, useState, useMemo} from "react";
 import './App.css';
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 
@@ -8,9 +8,16 @@ export default function Home() {
   });
 
   if (!isLoaded) return <div>Loading...</div>;
-  return (<div className="Home">
-  <h1>EasyPark</h1>        
-  <Map/></div>);
+  return (
+  <div className='Home'>
+    <div className="Menu"> 
+    <h1 className="MenuChild">EasyPark</h1>        
+    <input className='MenuChild'></input>
+    <button className='MenuChild'>Create Listing</button>
+    </div>
+  <Map/>
+  </div>
+);
 }
 
 function Map() {
