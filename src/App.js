@@ -8,23 +8,38 @@ export default function Home() {
   });
 
   if (!isLoaded) return <div>Loading...</div>;
-  return (
+  return ( 
+    
   <div className='Home'>
-    <div className="Menu"> 
-    <h1 className="MenuChild">EasyPark</h1>        
-    <input className='MenuChild'></input>
-    <button className='MenuChild'>Create Listing</button>
+    <Map/> 
+    <div className="Menu">
+      
+      <span><h1 id="Title">EasyPark</h1> </span>      
+      <span><input id="Search"></input> </span>    
+      <span><button>Create Listing</button> </span>    
+      <span><button>Login</button> </span>  
+
     </div>
-  <Map/>
   </div>
 );
+}
+
+
+const mapOptions = {
+  mapTypeControl : false,
+  streetViewControl:false,
+  fullscreenControl:false,
 }
 
 function Map() {
   const center = useMemo(() => ({ lat: 44, lng: -80 }), []);
 
   return (
-    <GoogleMap zoom={10} center={center} mapContainerClassName="map-container">
+    <GoogleMap 
+      zoom={10} 
+      center={center} 
+      mapContainerClassName="map-container"
+      options={mapOptions}>
       <Marker position={center} />
     </GoogleMap>
   );
