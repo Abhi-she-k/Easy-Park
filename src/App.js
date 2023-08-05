@@ -1,4 +1,4 @@
-import { React, useState, useRef, useMemo} from "react";
+import { React, useState, useEffect, useMemo} from "react";
 import './App.css';
 import { GoogleMap, useLoadScript, Marker, Autocomplete } from "@react-google-maps/api";
 import {usePosition} from 'use-position';
@@ -14,20 +14,61 @@ export default function Home() {
     libraries: ["places"]
   });
 
+  const { latitude, longitude, error } = usePosition();
+  const [mapCenter, setMapCenter] = useState({
+    lat: 0,
+    lng: 0
+  });
+
+  useEffect(() => {
+    if (latitude !== undefined && longitude !== undefined) {
+      setMapCenter({
+        lat: latitude,
+        lng: longitude
+      });
+    }
+  }, [latitude, longitude]);
+
   const mapOptions = {
     mapTypeControl: false,
     streetViewControl: false,
     fullscreenControl: false,
   };
-  const { latitude, longitude, error } = usePosition();
 
-  const [mapCenter, setMapCenter] = useState({
-    lat: latitude,
-    lng: longitude
-  });
+
+  
+
+  const [searchInput, setSearchInput] = useState(""); 
+
+  const handleSearchChange = (event) => {
+    setSearchInput(event.target.value);
+  };
+
+  const setLocation = (lat, lng) => {
+    const newPosition = {
+      lat: lat,
+      lng: lng
+    };
+    setMapCenter(newPosition);
+  }
+  
+  const search = (event) => {
+    event.preventDefault();
+
+    Geocode.fromAddress(searchInput)
+    .then((response) => {
+      const { lat, lng } = response.results[0].geometry.location;
+      setLocation(lat,lng);
+
+    })
+    .catch((error) => {
+      
+      console.error(error);
+    });
+
+  };
 
   const Map = () => {
-      
     return (
       <GoogleMap
         zoom={10}
@@ -37,36 +78,6 @@ export default function Home() {
         <Marker position={mapCenter} />
       </GoogleMap>
     );
-  };
-  
-
-  const [searchInput, setSearchInput] = useState(""); 
-
-  const handleSearchChange = (event) => {
-    setSearchInput(event.target.value);
-  };
-  
-  const search = (event) => {
-    event.preventDefault();
-    console.log(searchInput)
-
-    Geocode.fromAddress(searchInput)
-    .then((response) => {
-      const { lat, lng } = response.results[0].geometry.location;
-      console.log(lat, lng);
-      const newPosition = {
-        lat: lat,
-        lng: lng
-      };
-      setMapCenter(newPosition);
-      return(
-        <Map/>
-      )
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-
   };
 
   if (!isLoaded) return <div><h1>Loading...</h1></div>;
@@ -80,9 +91,9 @@ export default function Home() {
         <h1>EasyPark</h1>
       </span>      
       <span className="Wrapper">
-      <form onSubmit={search}>
+      <form >
         <input id="Search" type="text" placeholder="Toronto, ON, Canada" value={searchInput} onChange={handleSearchChange}/>
-        <button id = "Search-btn" type="submit" >Go</button> 
+        <button id = "Search-btn" type="submit" onClick={search}>Go</button> 
       </form>
       </span>  
       <span><button id="btn">Post Spot</button> </span>    
@@ -90,7 +101,10 @@ export default function Home() {
 
     </div>
   </div>
+
+  
 );
+
 }
 
 
