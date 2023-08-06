@@ -2,15 +2,12 @@ import { React, useState, useEffect, useMemo} from "react";
 import './App.css';
 import { GoogleMap, useLoadScript, Marker, Autocomplete } from "@react-google-maps/api";
 import {usePosition} from 'use-position';
-import Geocode from "react-geocode";
-
-
-Geocode.setApiKey("AIzaSyAQvx5oeGKYXE2PMOwXko-Qa4-Ge40XrpA");
+import Geocode from "react-geocode");
 
 
 export default function Home() {
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "AIzaSyAQvx5oeGKYXE2PMOwXko-Qa4-Ge40XrpA",
+    googleMapsApiKey: ",
     libraries: ["places"]
   });
 
